@@ -10,10 +10,16 @@ rollout 'rlt_RootMotionMaker' "Simple Root Motion Extractor"
     checkBox 'chk_x' "X" across:3 checked:true
     checkBox 'chk_y' "Y" checked:true
     checkBox 'chk_z' "Z" checked:true
+    Spinner 'clampStart' "Start" type:#integer across:2
+    Spinner 'clmapend' "End" type:#integer
     button 'extract' "Extract"
 
     on extract pressed do 
     (
+
+        customRange = (interval 0 0)
+        customRange.start = rlt_RootMotionMaker.clampStart.value 
+        customRange.end = rlt_RootMotionMaker.clmapend.value 
         undo on 
         (
             deselect $*
@@ -41,7 +47,21 @@ rollout 'rlt_RootMotionMaker' "Simple Root Motion Extractor"
                 (
                     sliderTime = i 
                     COMexpose.transform = nCOM.transform 
-                    Root.transform = dm_expose.transform 
+
+                    
+                    if i >= customRange.start and i <= customRange.end then -- inRange  
+                    (
+                        Root.transform = dm_expose.transform 
+                    )
+                    else --Outrange
+                    (
+                        Root.transform = dm_expose.transform 
+                        if Root.pos.x <= 0.0 do 
+                        (
+                            Root.pos.x = 0
+                        )
+                    )
+
                 )
                 if not rlt_RootMotionMaker.chk_x.checked do DeleteKeys Root.position.controller.X_Position.controller #allKeys
                 if not rlt_RootMotionMaker.chk_y.checked do DeleteKeys Root.position.controller.Y_Position.controller #allKeys
@@ -54,8 +74,9 @@ rollout 'rlt_RootMotionMaker' "Simple Root Motion Extractor"
                     nCOM.transform = COMexpose.transform 
                     --Root.transform = dm_expose.transform 
                 )
+
             )
         )
     )
 )
-CreateDialog 'rlt_RootMotionMaker'
+CreateDialog 'rlt_RootMotionMaker' 200 100
