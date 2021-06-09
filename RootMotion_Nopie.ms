@@ -10,8 +10,8 @@ rollout 'rlt_RootMotionMaker' "Simple Root Motion Extractor"
     checkBox 'chk_x' "X" across:3 checked:true
     checkBox 'chk_y' "Y" checked:true
     checkBox 'chk_z' "Z" checked:true
-    Spinner 'clampStart' "Start" type:#integer across:2
-    Spinner 'clmapend' "End" type:#integer
+    Spinner 'clampStart' "Start" type:#integer across:2 range:[0,9999,0]
+    Spinner 'clmapend' "End" type:#integer range:[0,9999,0]
     button 'extract' "Extract"
 
     on extract pressed do 
@@ -56,9 +56,9 @@ rollout 'rlt_RootMotionMaker' "Simple Root Motion Extractor"
                     else --Outrange
                     (
                         Root.transform = dm_expose.transform 
-                        if Root.pos.x <= 0.0 do 
+                        if Root.pos.z <= 0.0 do 
                         (
-                            Root.pos.x = 0
+                            Root.pos.z = 0
                         )
                     )
 
